@@ -474,6 +474,9 @@ public class ClubService {
                 () -> new IllegalArgumentException("findAllPrivateClubPostByClubId error: only clubMember can access")
         );
 
+        if(foundMember.getState().equals("탈퇴"))
+            throw new IllegalArgumentException("findAllPrivateClubPostByClubId error: members who have withdrawn are not allowed to access");
+
         JPAQueryFactory queryFactory = new JPAQueryFactory(entityManager);
         QClubPost clubPost = QClubPost.clubPost;
 
