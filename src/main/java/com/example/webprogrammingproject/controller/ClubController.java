@@ -59,7 +59,7 @@ public class ClubController {
         return ResponseEntity.ok().body(clubService.getClubInfo(clubId));
     }
 
-    @PatchMapping("club/info") // form-data 형식 필수
+    @PatchMapping("/club/info") // form-data 형식 필수
     public ResponseEntity<Void> updateClubInfo(
             @RequestHeader(name="Authorization") String token, UpdateClubInfoRequest request
     ) throws IOException {
@@ -92,7 +92,7 @@ public class ClubController {
 
     @PostMapping("/club/application") // form-data 형식 필수
     public ResponseEntity<Void> addClubMemberApplication(
-            @RequestHeader(name="Authorization") String token, @RequestBody AddClubMemberApplicationRequest request
+            @RequestHeader(name="Authorization") String token, AddClubMemberApplicationRequest request
     ) throws IOException {
         clubService.addClubMemberApplication(
                 tokenService.getMemberEmail(token), request
@@ -131,7 +131,7 @@ public class ClubController {
 
     @PostMapping("/club/post")
     public ResponseEntity<Void> addClubPost(
-            @RequestHeader(name="Authorization") String token, @RequestBody AddClubPostRequest request
+            @RequestHeader(name="Authorization") String token, AddClubPostRequest request
     ) throws IOException {
         clubService.addClubPost(
                 tokenService.getMemberEmail(token), request
@@ -141,7 +141,7 @@ public class ClubController {
 
     @PatchMapping("/club/post")
     public ResponseEntity<Void> updateClubPost(
-            @RequestHeader(name="Authorization") String token, @RequestBody UpdateClubPostRequest request
+            @RequestHeader(name="Authorization") String token, UpdateClubPostRequest request
     ) throws IOException {
         clubService.updateClubPost(
                 tokenService.getMemberEmail(token), request

@@ -6,6 +6,7 @@ import com.google.cloud.storage.Storage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
@@ -20,15 +21,16 @@ public class BucketService {
     private String bucketName;
 
     public String save(MultipartFile file) throws IOException {
-        String uuid = UUID.randomUUID().toString();
+        StringBuilder sb = new StringBuilder();
+        sb.append(UUID.randomUUID()).append('_').append(file.getOriginalFilename());
         storage.create(
-                BlobInfo.newBuilder(bucketName, uuid)
+                BlobInfo.newBuilder(bucketName, sb.toString())
                         .setContentType(file.getContentType())
                         .build(),
                 file.getInputStream()
         );
 
-        return uuid;
+        return sb.toString();
     }
 
     public void delete(String fileName) {

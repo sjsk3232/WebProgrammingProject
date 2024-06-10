@@ -63,7 +63,7 @@ public class WebSecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(HttpMethod.GET, "/club", "/club/info", "/club/post/public").permitAll()
                         .requestMatchers(
-                                "/login/**", "/oauth/**", "/accessToken", "/error", "/"
+                                "/member", "/login/**", "/oauth/**", "/accessToken", "/error", "/"
                         ).permitAll()
                         .requestMatchers("/club-application/result", "/club-application/admin").hasRole("ADMIN")
                         .anyRequest().authenticated()

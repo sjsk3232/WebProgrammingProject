@@ -66,6 +66,7 @@ public class ClubService {
 
         Club newClub = Club.builder()
                 .clubType(found.getClubType())
+                .clubName(found.getClubName())
                 .advisorName(found.getAdvisorName())
                 .advisorMajor(found.getAdvisorMajor())
                 .advisorContact(found.getAdvisorContact())
@@ -184,15 +185,16 @@ public class ClubService {
         if(!foundMember.getIsMaster())
             throw new IllegalArgumentException("updateClubInfo error: only master can change");
 
-        foundClub.setClubIntro(request.getClubIntro());
-        foundClub.setAdvisorName(request.getAdvisorName());
-        foundClub.setAdvisorMajor(request.getAdvisorMajor());
-        foundClub.setAdvisorContact(request.getAdvisorContact());
+        if(request.getClubIntro() != null) foundClub.setClubIntro(request.getClubIntro());
+        if(request.getAdvisorName() != null) foundClub.setAdvisorName(request.getAdvisorName());
+        if(request.getAdvisorMajor() != null) foundClub.setAdvisorMajor(request.getAdvisorMajor());
+        if(request.getAdvisorContact() != null) foundClub.setAdvisorContact(request.getAdvisorContact());
 
-        if(request.getImg() == null) return;
-        if(!foundClub.getClubImg().isEmpty()) bucketService.delete(foundClub.getClubImg());
-        String uuid = bucketService.save(request.getImg());
-        foundClub.setClubImg(uuid);
+        if(request.getImg() != null) {
+            if(foundClub.getClubImg() != null) bucketService.delete(foundClub.getClubImg());
+            String uuid = bucketService.save(request.getImg());
+            foundClub.setClubImg(uuid);
+        }
 
         clubRepository.save(foundClub);
     }
@@ -322,7 +324,8 @@ public class ClubService {
                 .select(
                         Projections.constructor(
                                 GetClubMemberApplicationResponse.class,
-                                clubMemberApplication.id, clubMemberApplication.applicant.name,
+                                clubMemberApplication.id, clubMemberApplication.club.id,
+                                clubMemberApplication.club.clubName, clubMemberApplication.applicant.name,
                                 clubMemberApplication.application, clubMemberApplication.result,
                                 clubMemberApplication.createdAt
                         )
@@ -352,7 +355,8 @@ public class ClubService {
                 .select(
                         Projections.constructor(
                                 GetClubMemberApplicationResponse.class,
-                                clubMemberApplication.id, clubMemberApplication.applicant.name,
+                                clubMemberApplication.id, clubMemberApplication.club.id,
+                                clubMemberApplication.club.clubName, clubMemberApplication.applicant.name,
                                 clubMemberApplication.application, clubMemberApplication.result,
                                 clubMemberApplication.createdAt
                         )
@@ -401,9 +405,9 @@ public class ClubService {
 
         if(!foundMember.getIsMaster()) throw new IllegalArgumentException("updateClubPost error: only master can change");
 
-        foundPost.setIsPublic(request.getIsPublic());
-        foundPost.setTitle(request.getTitle());
-        foundPost.setContent(request.getContent());
+        if(request.getIsPublic() != null) foundPost.setIsPublic(request.getIsPublic());
+        if(request.getTitle() != null) foundPost.setTitle(request.getTitle());
+        if(request.getContent() != null) foundPost.setContent(request.getContent());
         if(foundPost.getPostType().equals("사진") && request.getMultipartFile() != null) {
             if(foundPost.getMultipart() != null) bucketService.delete(foundPost.getMultipart());
             foundPost.setMultipart(bucketService.save(request.getMultipartFile()));

@@ -9,7 +9,6 @@ import java.time.LocalDateTime;
 
 @Getter
 @Setter
-@Builder
 public class GetClubInfoResponse {
     private Long id;
     private String clubType;
@@ -21,6 +20,7 @@ public class GetClubInfoResponse {
     private String advisorContact;
     private LocalDateTime createdAt;
 
+    @Builder
     public GetClubInfoResponse(
             Long id, String clubType, String clubName, String clubIntro, String clubImg,
             String advisorName, String advisorMajor, String advisorContact, LocalDateTime createdAt
@@ -31,7 +31,7 @@ public class GetClubInfoResponse {
         this.clubType = clubType;
         this.clubName = clubName;
         this.clubIntro = clubIntro;
-        this.clubImg = URL_PREFIX + clubImg;
+        this.clubImg = clubImg == null ? null : URL_PREFIX + clubImg;
         this.advisorName = advisorName;
         this.advisorMajor = advisorMajor;
         this.advisorContact = advisorContact;
@@ -39,14 +39,12 @@ public class GetClubInfoResponse {
     }
 
     public static GetClubInfoResponse of(Club found) {
-        final String URL_PREFIX = "https://storage.googleapis.com/bidmarkit-bucket/";
-
         return GetClubInfoResponse.builder()
                 .id(found.getId())
                 .clubType(found.getClubType())
                 .clubName(found.getClubName())
                 .clubIntro(found.getClubIntro())
-                .clubImg(URL_PREFIX + found.getClubImg())
+                .clubImg(found.getClubImg())
                 .advisorName(found.getAdvisorName())
                 .advisorMajor(found.getAdvisorMajor())
                 .advisorContact(found.getAdvisorContact())
