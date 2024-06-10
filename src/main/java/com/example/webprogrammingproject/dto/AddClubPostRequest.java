@@ -1,11 +1,13 @@
 package com.example.webprogrammingproject.dto;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.web.multipart.MultipartFile;
 
 @Getter
 @Setter
+@AllArgsConstructor
 public class AddClubPostRequest {
     private Long clubId;
     private String postType;
