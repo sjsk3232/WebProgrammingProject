@@ -141,6 +141,29 @@ public class ClubService {
         );
     }
 
+    public Page<GetClubInfoResponse> findAllClub(Pageable pageable) {
+        JPAQueryFactory queryFactory = new JPAQueryFactory(entityManager);
+        QClub club = QClub.club;
+
+        List<GetClubInfoResponse> results = queryFactory
+                .select(
+                        Projections.constructor(
+                                GetClubInfoResponse.class,
+                                club.id, club.clubType, club.clubName,
+                                club.clubIntro, club.clubImg, club.advisorName,
+                                club.advisorMajor, club.advisorContact, club.createdAt)
+                )
+                .from(club)
+                .offset(pageable.getOffset())
+                .limit(pageable.getPageSize())
+                .fetch();
+
+        return PageableExecutionUtils.getPage(results, pageable,
+                queryFactory.select(club.count())
+                        .from(club)::fetchCount
+        );
+    }
+
     public GetClubInfoResponse getClubInfo(Long clubId) {
         Club found = clubRepository.findById(clubId).orElseThrow(
                 () -> new IllegalArgumentException("getClubInfo error: not found club")

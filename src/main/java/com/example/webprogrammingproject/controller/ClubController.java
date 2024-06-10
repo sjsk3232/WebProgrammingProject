@@ -47,6 +47,13 @@ public class ClubController {
         return ResponseEntity.ok().body(clubService.findAllClubApplications(PageRequest.of(pageNum, size)));
     }
 
+    @GetMapping("/club")
+    public ResponseEntity<Page<GetClubInfoResponse>> getClubList(
+            @RequestParam int pageNum, @RequestParam int size
+    ) {
+        return ResponseEntity.ok().body(clubService.findAllClub(PageRequest.of(pageNum, size)));
+    }
+
     @GetMapping("/club/info")
     public ResponseEntity<GetClubInfoResponse> getClubInfo(@RequestParam Long clubId) {
         return ResponseEntity.ok().body(clubService.getClubInfo(clubId));
