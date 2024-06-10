@@ -217,7 +217,7 @@ public class ClubService {
                 .select(
                         Projections.constructor(
                                 GetClubMemberResponse.class,
-                                clubMember.position, clubMember.member.email,
+                                clubMember.position, clubMember.isMaster, clubMember.member.email,
                                 clubMember.member.name, clubMember.state
                         )
                 )
