@@ -11,6 +11,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
+import java.util.List;
 
 @RequiredArgsConstructor
 @Controller
@@ -52,6 +53,20 @@ public class ClubController {
             @RequestParam int pageNum, @RequestParam int size
     ) {
         return ResponseEntity.ok().body(clubService.findAllClub(PageRequest.of(pageNum, size)));
+    }
+
+    @GetMapping("/club/joined")
+    public ResponseEntity<List<GetClubInfoResponse>> getJoinedClubList(
+            @RequestHeader(name="Authorization") String token
+    ) {
+        return ResponseEntity.ok().body(clubService.findAllJoinedClub(tokenService.getMemberEmail(token)));
+    }
+
+    @GetMapping("/club/managin")
+    public ResponseEntity<List<GetClubInfoResponse>> getManagingClubList(
+            @RequestHeader(name="Authorization") String token
+    ) {
+        return ResponseEntity.ok().body(clubService.findAllManagingClub(tokenService.getMemberEmail(token)));
     }
 
     @GetMapping("/club/info")

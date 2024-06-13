@@ -13,7 +13,7 @@ import java.util.Map;
 @RestControllerAdvice
 public class CustomExceptionHandler {
 
-    @ExceptionHandler(value = RuntimeException.class)
+    @ExceptionHandler(value = Exception.class)
     public ResponseEntity<Map<String, String>> handleException(
             Exception e, HttpServletRequest request
     ) {

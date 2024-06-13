@@ -165,6 +165,52 @@ public class ClubService {
         );
     }
 
+    public List<GetClubInfoResponse> findAllJoinedClub(String memberId) {
+        JPAQueryFactory queryFactory = new JPAQueryFactory(entityManager);
+        QClub club = QClub.club;
+        QClubMember clubMember = QClubMember.clubMember;
+
+        BooleanBuilder whereClause = new BooleanBuilder(clubMember.member.email.eq(memberId));
+
+        List<GetClubInfoResponse> results = queryFactory
+                .select(
+                        Projections.constructor(
+                                GetClubInfoResponse.class,
+                                club.id, club.clubType, club.clubName,
+                                club.clubIntro, club.clubImg, club.advisorName,
+                                club.advisorMajor, club.advisorContact, club.createdAt)
+                )
+                .from(clubMember)
+                .where(whereClause)
+                .leftJoin(clubMember.club, club)
+                .fetch();
+
+        return results;
+    }
+
+    public List<GetClubInfoResponse> findAllManagingClub(String memberId) {
+        JPAQueryFactory queryFactory = new JPAQueryFactory(entityManager);
+        QClub club = QClub.club;
+        QClubMember clubMember = QClubMember.clubMember;
+
+        BooleanBuilder whereClause = new BooleanBuilder(clubMember.member.email.eq(memberId).and(clubMember.isMaster));
+
+        List<GetClubInfoResponse> results = queryFactory
+                .select(
+                        Projections.constructor(
+                                GetClubInfoResponse.class,
+                                club.id, club.clubType, club.clubName,
+                                club.clubIntro, club.clubImg, club.advisorName,
+                                club.advisorMajor, club.advisorContact, club.createdAt)
+                )
+                .from(clubMember)
+                .where(whereClause)
+                .leftJoin(clubMember.club, club)
+                .fetch();
+
+        return results;
+    }
+
     public GetClubInfoResponse getClubInfo(Long clubId) {
         Club found = clubRepository.findById(clubId).orElseThrow(
                 () -> new IllegalArgumentException("getClubInfo error: not found club")
