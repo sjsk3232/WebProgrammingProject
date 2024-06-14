@@ -16,4 +16,5 @@ public class UpdateClubInfoRequest {
     private String advisorMajor;
     private String advisorContact;
     private String regularMeeting;
+    private MultipartFile applicationForm;
 }

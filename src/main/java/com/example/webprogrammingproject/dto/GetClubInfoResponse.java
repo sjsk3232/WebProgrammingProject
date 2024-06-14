@@ -19,13 +19,14 @@ public class GetClubInfoResponse {
     private String advisorMajor;
     private String advisorContact;
     private String regularMeeting;
+    private String applicationForm;
     private LocalDateTime createdAt;
 
     @Builder
     public GetClubInfoResponse(
             Long id, String clubType, String clubName, String clubIntro, String clubImg,
             String advisorName, String advisorMajor, String advisorContact,
-            String regularMeeting, LocalDateTime createdAt
+            String regularMeeting, String applicationForm, LocalDateTime createdAt
     ) {
         final String URL_PREFIX = "https://storage.googleapis.com/bidmarkit-bucket/";
 
@@ -38,6 +39,7 @@ public class GetClubInfoResponse {
         this.advisorMajor = advisorMajor;
         this.advisorContact = advisorContact;
         this.regularMeeting = regularMeeting;
+        this.applicationForm = applicationForm == null ? null : URL_PREFIX + applicationForm;
         this.createdAt = createdAt;
     }
 
@@ -52,11 +54,17 @@ public class GetClubInfoResponse {
                 .advisorMajor(found.getAdvisorMajor())
                 .advisorContact(found.getAdvisorContact())
                 .regularMeeting(found.getRegularMeeting())
+                .applicationForm(found.getApplicationForm())
                 .createdAt(found.getCreatedAt())
                 .build();
     }
 
     public void setClubImg(String clubImg) {
+        final String URL_PREFIX = "https://storage.googleapis.com/bidmarkit-bucket/";
+        this.clubImg = URL_PREFIX + clubImg;
+    }
+
+    public void setApplicationForm(String applicationForm) {
         final String URL_PREFIX = "https://storage.googleapis.com/bidmarkit-bucket/";
         this.clubImg = URL_PREFIX + clubImg;
     }

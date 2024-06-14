@@ -176,7 +176,7 @@ public class ClubController {
 
     @GetMapping("/club/post/public")
     public ResponseEntity<Page<GetClubPostResponse>> findAllPublicClubPostByPostType(
-            @RequestParam Long clubId, @RequestParam String postType,
+            @RequestParam(required = false) Long clubId, @RequestParam String postType,
             @RequestParam int pageNum, @RequestParam int size
     ) {
         return ResponseEntity.ok().body(

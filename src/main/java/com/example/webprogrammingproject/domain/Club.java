@@ -36,6 +36,9 @@ public class Club {
     @Column(name = "club_img")
     private String clubImg;
 
+    @Column(name = "club_application_form")
+    private String applicationForm;
+
     @Column(name = "advisor_name")
     private String advisorName;
 

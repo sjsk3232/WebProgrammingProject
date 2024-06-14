@@ -26,6 +26,8 @@ public class QClub extends EntityPathBase<Club> {
 
     public final StringPath advisorName = createString("advisorName");
 
+    public final StringPath applicationForm = createString("applicationForm");
+
     public final StringPath clubImg = createString("clubImg");
 
     public final StringPath clubIntro = createString("clubIntro");

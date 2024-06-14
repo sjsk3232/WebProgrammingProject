@@ -152,7 +152,8 @@ public class ClubService {
                                 GetClubInfoResponse.class,
                                 club.id, club.clubType, club.clubName,
                                 club.clubIntro, club.clubImg, club.advisorName,
-                                club.advisorMajor, club.advisorContact, club.regularMeeting, club.createdAt)
+                                club.advisorMajor, club.advisorContact, club.regularMeeting,
+                                club.applicationForm, club.createdAt)
                 )
                 .from(club)
                 .offset(pageable.getOffset())
@@ -178,7 +179,8 @@ public class ClubService {
                                 GetClubInfoResponse.class,
                                 club.id, club.clubType, club.clubName,
                                 club.clubIntro, club.clubImg, club.advisorName,
-                                club.advisorMajor, club.advisorContact, club.regularMeeting, club.createdAt)
+                                club.advisorMajor, club.advisorContact, club.regularMeeting,
+                                club.applicationForm, club.createdAt)
                 )
                 .from(clubMember)
                 .where(whereClause)
@@ -201,7 +203,8 @@ public class ClubService {
                                 GetClubInfoResponse.class,
                                 club.id, club.clubType, club.clubName,
                                 club.clubIntro, club.clubImg, club.advisorName,
-                                club.advisorMajor, club.advisorContact, club.regularMeeting, club.createdAt)
+                                club.advisorMajor, club.advisorContact, club.regularMeeting,
+                                club.applicationForm, club.createdAt)
                 )
                 .from(clubMember)
                 .where(whereClause)
@@ -241,6 +244,12 @@ public class ClubService {
             if(foundClub.getClubImg() != null) bucketService.delete(foundClub.getClubImg());
             String uuid = bucketService.save(request.getImg());
             foundClub.setClubImg(uuid);
+        }
+
+        if(request.getApplicationForm() != null) {
+            if(foundClub.getApplicationForm() != null) bucketService.delete(foundClub.getApplicationForm());
+            String uuid = bucketService.save(request.getApplicationForm());
+            foundClub.setApplicationForm(uuid);
         }
 
         clubRepository.save(foundClub);
@@ -488,10 +497,10 @@ public class ClubService {
         QClubPost clubPost = QClubPost.clubPost;
 
         BooleanBuilder whereClause = new BooleanBuilder(
-                clubPost.club.id.eq(clubId)
-                        .and(clubPost.isPublic.eq(true))
+                clubPost.isPublic.eq(true)
                         .and(clubPost.postType.eq(postType))
         );
+        if (clubId != null) whereClause.and(clubPost.club.id.eq(clubId));
 
         List<GetClubPostResponse> results = queryFactory
                 .select(
