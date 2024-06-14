@@ -42,6 +42,8 @@ public class QClub extends EntityPathBase<Club> {
 
     public final ListPath<ClubPost, QClubPost> posts = this.<ClubPost, QClubPost>createList("posts", ClubPost.class, QClubPost.class, PathInits.DIRECT2);
 
+    public final StringPath regularMeeting = createString("regularMeeting");
+
     public final DateTimePath<java.time.LocalDateTime> updatedAt = createDateTime("updatedAt", java.time.LocalDateTime.class);
 
     public QClub(String variable) {

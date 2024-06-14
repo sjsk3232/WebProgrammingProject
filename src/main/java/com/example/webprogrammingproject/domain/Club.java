@@ -45,6 +45,9 @@ public class Club {
     @Column(name = "advisor_contact")
     private String advisorContact;
 
+    @Column(name = "regular_meeting")
+    private String regularMeeting;
+
     @Builder.Default
     @OneToMany(mappedBy = "club", cascade = CascadeType.ALL)
     private List<ClubMember> members = new ArrayList<>();

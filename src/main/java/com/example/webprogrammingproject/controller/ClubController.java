@@ -14,7 +14,7 @@ import java.io.IOException;
 import java.util.List;
 
 @RequiredArgsConstructor
-@Controller
+@RestController
 public class ClubController {
     private final ClubService clubService;
     private final TokenService tokenService;
@@ -196,6 +196,15 @@ public class ClubController {
                 clubService.findAllClubPostByClubIdAndPostType(
                         tokenService.getMemberEmail(token), clubId, postType, PageRequest.of(pageNum, size)
                 )
+        );
+    }
+
+    @GetMapping("/club/post/{postId}")
+    public ResponseEntity<GetClubPostResponse> findClubPostByPostId(
+            @PathVariable("postId") Long id
+    ) {
+        return ResponseEntity.ok().body(
+                clubService.findClubPostByPostId(id)
         );
     }
 }

@@ -15,4 +15,5 @@ public class UpdateClubInfoRequest {
     private String advisorName;
     private String advisorMajor;
     private String advisorContact;
+    private String regularMeeting;
 }

@@ -152,7 +152,7 @@ public class ClubService {
                                 GetClubInfoResponse.class,
                                 club.id, club.clubType, club.clubName,
                                 club.clubIntro, club.clubImg, club.advisorName,
-                                club.advisorMajor, club.advisorContact, club.createdAt)
+                                club.advisorMajor, club.advisorContact, club.regularMeeting, club.createdAt)
                 )
                 .from(club)
                 .offset(pageable.getOffset())
@@ -178,7 +178,7 @@ public class ClubService {
                                 GetClubInfoResponse.class,
                                 club.id, club.clubType, club.clubName,
                                 club.clubIntro, club.clubImg, club.advisorName,
-                                club.advisorMajor, club.advisorContact, club.createdAt)
+                                club.advisorMajor, club.advisorContact, club.regularMeeting, club.createdAt)
                 )
                 .from(clubMember)
                 .where(whereClause)
@@ -201,7 +201,7 @@ public class ClubService {
                                 GetClubInfoResponse.class,
                                 club.id, club.clubType, club.clubName,
                                 club.clubIntro, club.clubImg, club.advisorName,
-                                club.advisorMajor, club.advisorContact, club.createdAt)
+                                club.advisorMajor, club.advisorContact, club.regularMeeting, club.createdAt)
                 )
                 .from(clubMember)
                 .where(whereClause)
@@ -235,6 +235,7 @@ public class ClubService {
         if(request.getAdvisorName() != null) foundClub.setAdvisorName(request.getAdvisorName());
         if(request.getAdvisorMajor() != null) foundClub.setAdvisorMajor(request.getAdvisorMajor());
         if(request.getAdvisorContact() != null) foundClub.setAdvisorContact(request.getAdvisorContact());
+        if(request.getRegularMeeting() != null) foundClub.setRegularMeeting(request.getRegularMeeting());
 
         if(request.getImg() != null) {
             if(foundClub.getClubImg() != null) bucketService.delete(foundClub.getClubImg());
@@ -550,5 +551,13 @@ public class ClubService {
                         .from(clubPost)
                         .where(whereClause)::fetchCount
         );
+    }
+
+    public GetClubPostResponse findClubPostByPostId(Long postId) {
+        ClubPost found = clubPostRepository.findById(postId).orElseThrow(
+                () -> new IllegalArgumentException("findClubPostByPostId error: not found post")
+        );
+
+        return GetClubPostResponse.of(found);
     }
 }

@@ -61,7 +61,7 @@ public class WebSecurityConfig {
                 .formLogin(auth -> auth.disable())
                 .httpBasic(auth -> auth.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(HttpMethod.GET, "/club", "/club/info", "/club/post/public").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/club", "/club/info", "/club/post/**").permitAll()
                         .requestMatchers(
                                 "/member", "/login/**", "/oauth/**", "/accessToken", "/error", "/"
                         ).permitAll()

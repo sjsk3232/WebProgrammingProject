@@ -18,12 +18,14 @@ public class GetClubInfoResponse {
     private String advisorName;
     private String advisorMajor;
     private String advisorContact;
+    private String regularMeeting;
     private LocalDateTime createdAt;
 
     @Builder
     public GetClubInfoResponse(
             Long id, String clubType, String clubName, String clubIntro, String clubImg,
-            String advisorName, String advisorMajor, String advisorContact, LocalDateTime createdAt
+            String advisorName, String advisorMajor, String advisorContact,
+            String regularMeeting, LocalDateTime createdAt
     ) {
         final String URL_PREFIX = "https://storage.googleapis.com/bidmarkit-bucket/";
 
@@ -35,6 +37,7 @@ public class GetClubInfoResponse {
         this.advisorName = advisorName;
         this.advisorMajor = advisorMajor;
         this.advisorContact = advisorContact;
+        this.regularMeeting = regularMeeting;
         this.createdAt = createdAt;
     }
 
@@ -48,6 +51,7 @@ public class GetClubInfoResponse {
                 .advisorName(found.getAdvisorName())
                 .advisorMajor(found.getAdvisorMajor())
                 .advisorContact(found.getAdvisorContact())
+                .regularMeeting(found.getRegularMeeting())
                 .createdAt(found.getCreatedAt())
                 .build();
     }
