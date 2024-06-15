@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
@@ -353,6 +354,16 @@ public class ClubService {
         clubMemberApplicationRepository.save(foundApplication);
 
         if(!request.getResult().equals("승인")) return;
+
+        Optional<ClubMember> existMember = clubMemberRepository.findByClub_IdAndMember_Email(
+                foundApplication.getClub().getId(), foundApplication.getApplicant().getEmail()
+        );
+
+        if(existMember.isPresent()) {
+            existMember.get().setState("활동");
+            clubMemberRepository.save(existMember.get());
+            return;
+        }
 
         clubMemberRepository.save(ClubMember.builder()
                 .club(foundApplication.getClub())
