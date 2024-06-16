@@ -32,6 +32,6 @@ public class MemberService {
 
     public Member findById(String memberId) {
         return memberRepository.findById(memberId)
-                .orElseThrow(() -> new IllegalArgumentException("Unexpected member"));
+                .orElse(null);
     }
 }

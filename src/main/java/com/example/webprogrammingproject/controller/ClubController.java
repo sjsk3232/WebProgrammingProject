@@ -27,8 +27,9 @@ public class ClubController {
     }
 
     @PostMapping("/club-application/result")
-    public ResponseEntity<Void> reviewClubApplication(@RequestBody ReviewClubApplicationRequest request) {
-        clubService.reviewClubApplication(request);
+    public ResponseEntity<Void> reviewClubApplication(
+            @RequestHeader(name="Authorization") String token, @RequestBody ReviewClubApplicationRequest request) {
+        clubService.reviewClubApplication(tokenService.getMemberEmail(token), request);
         return ResponseEntity.ok().build();
     }
 
@@ -43,9 +44,11 @@ public class ClubController {
 
     @GetMapping("/club-application/admin")
     public ResponseEntity<Page<GetClubApplicationResponse>> getClubApplications(
-            @RequestParam int pageNum, @RequestParam int size
+            @RequestHeader(name="Authorization") String token, @RequestParam int pageNum, @RequestParam int size
     ) {
-        return ResponseEntity.ok().body(clubService.findAllClubApplications(PageRequest.of(pageNum, size)));
+        return ResponseEntity.ok().body(clubService.findAllClubApplications(
+                tokenService.getMemberEmail(token), PageRequest.of(pageNum, size))
+        );
     }
 
     @GetMapping("/club")

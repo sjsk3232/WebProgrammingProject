@@ -55,9 +55,16 @@ public class ClubService {
     }
 
     @Transactional
-    public void reviewClubApplication(ReviewClubApplicationRequest request) {
+    public void reviewClubApplication(String email, ReviewClubApplicationRequest request) {
         ClubApplication found = clubApplicationRepository.findById(request.getClubApplicationId())
                 .orElseThrow(() -> new IllegalArgumentException("reviewClubApplication error: not found clubApplication"));
+
+        Member foundMember = memberRepository.findByEmail(email).orElseThrow(
+                () -> new IllegalArgumentException("reviewClubApplication error: not found member")
+        );
+
+        if(!foundMember.getRole().equals("ROLE_ADMIN"))
+            throw new IllegalArgumentException("reviewClubApplication error: only admin can access");
 
         found.setResult(request.getResult());
         found.setRejectionReason(request.getRejectionReason());
@@ -89,7 +96,14 @@ public class ClubService {
         clubMemberRepository.save(newClubMember);
     }
 
-    public Page<GetClubApplicationResponse> findAllClubApplications(Pageable pageable) {
+    public Page<GetClubApplicationResponse> findAllClubApplications(String email, Pageable pageable) {
+        Member foundMember = memberRepository.findByEmail(email).orElseThrow(
+                () -> new IllegalArgumentException("findAllClubApplications error: not found member")
+        );
+
+        if(!foundMember.getRole().equals("ROLE_ADMIN"))
+            throw new IllegalArgumentException("findAllClubApplications error: only admin can access");
+
         JPAQueryFactory queryFactory = new JPAQueryFactory(entityManager);
         QClubApplication clubApplication = QClubApplication.clubApplication;
 
@@ -172,7 +186,10 @@ public class ClubService {
         QClub club = QClub.club;
         QClubMember clubMember = QClubMember.clubMember;
 
-        BooleanBuilder whereClause = new BooleanBuilder(clubMember.member.email.eq(memberId));
+        BooleanBuilder whereClause = new BooleanBuilder(
+                clubMember.member.email.eq(memberId)
+                        .and(clubMember.state.eq("활동"))
+        );
 
         List<GetClubInfoResponse> results = queryFactory
                 .select(
@@ -196,7 +213,11 @@ public class ClubService {
         QClub club = QClub.club;
         QClubMember clubMember = QClubMember.clubMember;
 
-        BooleanBuilder whereClause = new BooleanBuilder(clubMember.member.email.eq(memberId).and(clubMember.isMaster));
+        BooleanBuilder whereClause = new BooleanBuilder(
+                clubMember.member.email.eq(memberId)
+                        .and(clubMember.isMaster)
+                        .and(clubMember.state.eq("활동"))
+        );
 
         List<GetClubInfoResponse> results = queryFactory
                 .select(

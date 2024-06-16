@@ -10,6 +10,7 @@ import java.time.LocalDate;
 @Getter
 @Setter
 @AllArgsConstructor
+@Builder
 public class AddMemberRequest {
     private String email;
     private String password;
