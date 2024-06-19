@@ -1,5 +1,5 @@
 [[item-create]]
-=== 상품등록
+=== 회원 가입
 
 ==== HTTP Request
 include::{snippets}/member/signup/http-request.adoc[]
