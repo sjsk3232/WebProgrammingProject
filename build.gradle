@@ -2,6 +2,7 @@ plugins {
     id 'java'
     id 'org.springframework.boot' version '3.3.0'
     id 'io.spring.dependency-management' version '1.1.5'
+    id "org.asciidoctor.jvm.convert" version "3.3.2"
 }
 
 group = 'com.example'
@@ -17,6 +18,7 @@ configurations {
     compileOnly {
         extendsFrom annotationProcessor
     }
+    asciidoctorExt
 }
 
 repositories {
@@ -48,12 +50,20 @@ dependencies {
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testImplementation 'org.projectlombok:lombok'
+    testImplementation group: 'org.assertj', name: 'assertj-core', version: '3.26.0'
+    asciidoctorExt 'org.springframework.restdocs:spring-restdocs-asciidoctor'
+    testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
     testAnnotationProcessor 'org.projectlombok:lombok'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
+ext {
+    snippetsDir = file('build/generated-snippets') // (5)
+}
+
 tasks.named('test') {
     useJUnitPlatform()
+    outputs.dir snippetsDir
 }
 
 def querydslSrcDir = 'src/main/generated'
@@ -66,12 +76,43 @@ sourceSets {
     }
 }
 
+asciidoctor {
+    configurations 'asciidoctorExt' // (7)
+    sources{
+        include("**/index.adoc")
+    }
+    baseDirFollowsSourceFile() // (8)
+    inputs.dir snippetsDir // (9)
+    dependsOn test // (10)
+}
+
+asciidoctor.doFirst {
+    delete file('src/main/resources/static/docs')  // (11)
+}
+
 compileJava {
     options.compilerArgs << '-Aquerydsl.generatedAnnotationClass=javax.annotation.Generated'
 }
 
 tasks.withType(JavaCompile) {
     options.generatedSourceOutputDirectory = file(querydslSrcDir)
+}
+
+task copyDocument(type: Copy) { // (12)
+    dependsOn asciidoctor
+    from file("build/docs/asciidoc")
+    into file("src/main/resources/static/docs")
+}
+
+build {
+    dependsOn copyDocument
+}
+
+bootJar {
+    dependsOn asciidoctor
+    from ("${asciidoctor.outputDir}") {//asciidoc 조각을 html로 변환 후 서버를 실행하여 API를 공유하기 위함
+        into 'static/docs'
+    }
 }
 
 clean {

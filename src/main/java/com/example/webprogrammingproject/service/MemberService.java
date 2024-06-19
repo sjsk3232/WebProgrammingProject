@@ -34,4 +34,8 @@ public class MemberService {
         return memberRepository.findById(memberId)
                 .orElse(null);
     }
+
+    public void deleteMember(String memberEmail) {
+        memberRepository.deleteById(memberEmail);
+    }
 }

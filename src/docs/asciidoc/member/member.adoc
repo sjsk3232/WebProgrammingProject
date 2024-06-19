@@ -1,0 +1,8 @@
+[[item-create]]
+=== 상품등록
+
+==== HTTP Request
+include::{snippets}/member/signup/http-request.adoc[]
+
+==== HTTP Response
+include::{snippets}/member/signup/http-response.adoc[]
